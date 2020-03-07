@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,6 +42,23 @@ namespace AvatarRotator.Controllers
             return this.Ok(result.ToArray());
         }
 
+        // GET: api/Rotations/5
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("{rotationId}")]
+        public async Task<IActionResult> GetRotationImages([FromRoute] int rotationId)
+        {
+            (Rotation rotation, IActionResult responseIfInvalid) = await this.GetRotationIfExistsAndUserHasAccessToIt(rotationId);
+
+            if (rotation == null)
+                return responseIfInvalid;
+
+            IEnumerable<Image> rotationImages =
+                await this._connection.QueryAsync<Image>("SELECT * FROM Images WHERE RotationID = @Id",
+                    new {id = rotation.ID });
+
+            return this.Ok(rotationImages.ToArray());
+        }
+
         // POST: api/Rotations
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
@@ -74,6 +92,38 @@ namespace AvatarRotator.Controllers
                 { rotationID = insertedRotationID, link = this.Base64Encode(insertedRotationID.ToString()) });
         }
 
+        // POST: api/Rotations
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPost("{rotationId}")]
+        public async Task<IActionResult> AddImageToRotation([FromRoute] int rotationId, [FromBody] ImageDto imageDto)
+        {
+            if (string.IsNullOrWhiteSpace(imageDto.Link))
+                return this.BadRequest("Image link cannot be empty.");
+
+            Task<bool> isImageLinkValid = this.ImageLinkExists(imageDto.Link);
+
+            (Rotation rotation, IActionResult responseIfInvalid) = await this.GetRotationIfExistsAndUserHasAccessToIt(rotationId);
+
+            if (rotation == null)
+                return responseIfInvalid;
+
+            if (!await isImageLinkValid)
+                return this.Forbid("Link doesn't target an image.'");
+
+            int insertedImageID = await this._connection.ExecuteScalarAsync<int>(
+                @"INSERT INTO [dbo].[Images]
+                   ([RotationID]
+                   ,[Link]
+                   ,[Added])
+             VALUES
+                   (@id,
+                   @link,
+                   @added);
+            SELECT CAST(SCOPE_IDENTITY() as int)", new {id = rotationId, link = imageDto.Link, added = DateTime.UtcNow});
+
+            return this.Ok(new { imageId = insertedImageID, link = imageDto.Link });
+        }
+
         // UPDATE: api/Rotations
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPatch]
@@ -82,16 +132,10 @@ namespace AvatarRotator.Controllers
             if (string.IsNullOrWhiteSpace(rotationDto.Name))
                 return this.BadRequest("Name cannot be empty");
 
-            var rotation = this._connection.QueryFirstOrDefault<Rotation>("SELECT * FROM Rotations WHERE ID = @id",
-                new { id = rotationDto.ID });
+            (Rotation rotation, IActionResult responseIfInvalid) = await this.GetRotationIfExistsAndUserHasAccessToIt(rotationDto.ID);
 
             if (rotation == null)
-                return this.Forbid();
-
-            int userID = this.GetAuthenticatedUserID();
-
-            if (rotation.OwnerID != userID)
-                return this.Unauthorized("This rotation doesn't belong to the user.'");
+                return responseIfInvalid;
 
             await this._connection.ExecuteAsync(
                 "UPDATE Rotations SET Name = @name, Modified = @modified WHERE ID = @id", new
@@ -104,27 +148,58 @@ namespace AvatarRotator.Controllers
             return this.Ok();
         }
 
-        // DELETE: api/Rotations
+        // DELETE: api/Rotations/5?ImageId=4
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpDelete]
-        public async Task<IActionResult> DeleteRotation([FromBody] RotationDto rotationDto)
+        [HttpDelete("{rotationId}")]
+        public async Task<IActionResult> DeleteImage([FromRoute] int rotationId, [FromQuery] int? imageId)
         {
-            var rotation = this._connection.QueryFirstOrDefault<Rotation>("SELECT * FROM Rotations WHERE ID = @id",
-                new { id = rotationDto.ID });
+            (Rotation rotation, IActionResult responseIfInvalid) = await this.GetRotationIfExistsAndUserHasAccessToIt(rotationId);
 
             if (rotation == null)
-                return this.Forbid();
+                return responseIfInvalid;
+
+            if (imageId.HasValue)
+            {
+                await this._connection.ExecuteAsync("DELETE FROM Images WHERE ID = @id", new { id = imageId.Value });
+            }
+            else
+            {
+                await this._connection.ExecuteAsync("DELETE FROM Images WHERE RotationID = @id", new { id = rotation.ID });
+                await this._connection.ExecuteAsync("DELETE FROM Rotations WHERE ID = @id", new { id = rotation.ID });
+            }
+
+            return this.Ok();
+        }
+
+        private async Task<(Rotation rotation, IActionResult responseIfInvalid)> GetRotationIfExistsAndUserHasAccessToIt(int rotationId)
+        {
+            Rotation rotation = await this._connection.QueryFirstOrDefaultAsync<Rotation>("SELECT * FROM Rotations WHERE ID = @id",
+                new { id = rotationId });
+
+            if (rotation == null)
+                return (null, this.Forbid());
 
             int userID = this.GetAuthenticatedUserID();
 
             if (rotation.OwnerID != userID)
-                return this.Unauthorized("This rotation doesn't belong to the user.'");
+                return (null, this.Unauthorized("This rotation doesn't belong to the user.'"));
 
-            await this._connection.ExecuteAsync("DELETE FROM Images WHERE RotationID = @id", new { id = rotationDto.ID });
-            await this._connection.ExecuteAsync("DELETE FROM Rotations WHERE ID = @id", new { id = rotationDto.ID });
+            return (rotation, null);
+        }
 
-
-            return this.Ok();
+        private async Task<bool> ImageLinkExists(string imageUrlAddress)
+        {
+            WebRequest webRequest = WebRequest.Create(imageUrlAddress);
+            try
+            {
+                WebResponse webResponse = await webRequest.GetResponseAsync();
+                string contentType = webResponse.Headers.Get("Content-Type");
+                return contentType != null ? contentType.StartsWith("image/") : false;
+            }
+            catch //If exception thrown then couldn't get response from address 
+            {
+                return false;
+            }
         }
 
         public string Base64Encode(string plainText)
