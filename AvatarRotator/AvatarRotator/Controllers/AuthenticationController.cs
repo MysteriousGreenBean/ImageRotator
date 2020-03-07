@@ -3,12 +3,12 @@ using AvatarRotator.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using MortisAuthenticator;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using MortisAuthenticator;
 
 namespace AvatarRotator.Controllers
 {

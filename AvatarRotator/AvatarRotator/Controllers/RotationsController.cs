@@ -1,22 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
-using AvatarRotator.Dto;
+﻿using AvatarRotator.Dto;
 using AvatarRotator.Models;
 using Dapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace AvatarRotator.Controllers
 {
-
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class RotationsController : ControllerBase
@@ -29,7 +27,6 @@ namespace AvatarRotator.Controllers
         }
 
         // GET: api/Rotations
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet]
         public async Task<IActionResult> GetRotations()
         {
@@ -43,7 +40,6 @@ namespace AvatarRotator.Controllers
         }
 
         // GET: api/Rotations/5
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("{rotationId}")]
         public async Task<IActionResult> GetRotationImages([FromRoute] int rotationId)
         {
@@ -60,7 +56,6 @@ namespace AvatarRotator.Controllers
         }
 
         // POST: api/Rotations
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
         public async Task<IActionResult> AddRotation([FromBody] RotationDto rotationDto)
         {
@@ -93,7 +88,6 @@ namespace AvatarRotator.Controllers
         }
 
         // POST: api/Rotations
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("{rotationId}")]
         public async Task<IActionResult> AddImageToRotation([FromRoute] int rotationId, [FromBody] ImageDto imageDto)
         {
@@ -125,7 +119,6 @@ namespace AvatarRotator.Controllers
         }
 
         // UPDATE: api/Rotations
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPatch]
         public async Task<IActionResult> PatchRotation([FromBody] RotationDto rotationDto)
         {
@@ -149,7 +142,6 @@ namespace AvatarRotator.Controllers
         }
 
         // DELETE: api/Rotations/5?ImageId=4
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpDelete("{rotationId}")]
         public async Task<IActionResult> DeleteImage([FromRoute] int rotationId, [FromQuery] int? imageId)
         {
