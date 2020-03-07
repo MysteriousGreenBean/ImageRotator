@@ -6,11 +6,12 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
 const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
+const appBaseUrl = document.getElementsByTagName('base')[0].href;
 const rootElement = document.getElementById('root');
 
 ReactDOM.render(
   <BrowserRouter basename={baseUrl}>
-    <App />
+    <App baseUrl={appBaseUrl}/>
   </BrowserRouter>,
   rootElement);
 

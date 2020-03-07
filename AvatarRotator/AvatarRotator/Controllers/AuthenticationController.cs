@@ -3,12 +3,12 @@ using AvatarRotator.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using MortisAuthenticator;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using MortisAuthenticator;
 
 namespace AvatarRotator.Controllers
 {
@@ -30,10 +30,9 @@ namespace AvatarRotator.Controllers
         {
             try
             {
-                (int ID, string username) user =
-                    await this._userAuthenticator.GetUserIfValidCredentialsAsync(userDto.Username, userDto.Password);
+                (int userId, string username) = await this._userAuthenticator.GetUserIfValidCredentialsAsync(userDto.Username, userDto.Password);
 
-                if (user.ID == -1)
+                if (userId == -1)
                 {
                     return this.Unauthorized(new { message = "Username or password is incorrect" });
                 }
@@ -44,7 +43,7 @@ namespace AvatarRotator.Controllers
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
-                        new Claim(ClaimTypes.Name, user.ID.ToString()),
+                        new Claim(ClaimTypes.Name, userId.ToString()),
                     }),
                     Expires = DateTime.UtcNow.AddDays(7),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -53,8 +52,8 @@ namespace AvatarRotator.Controllers
                 string tokenString = tokenHandler.WriteToken(token);
                 return this.Ok(new
                 {
-                    ID = user.ID,
-                    username = user.username,
+                    ID = userId,
+                    username = username,
                     token = tokenString
                 });
             }

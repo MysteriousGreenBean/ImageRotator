@@ -104,6 +104,7 @@ namespace AvatarRotator.Controllers
             if (!await isImageLinkValid)
                 return this.Forbid("Link doesn't target an image.'");
 
+            DateTime imageAdded = DateTime.UtcNow;
             int insertedImageID = await this._connection.ExecuteScalarAsync<int>(
                 @"INSERT INTO [dbo].[Images]
                    ([RotationID]
@@ -113,9 +114,17 @@ namespace AvatarRotator.Controllers
                    (@id,
                    @link,
                    @added);
-            SELECT CAST(SCOPE_IDENTITY() as int)", new {id = rotationId, link = imageDto.Link, added = DateTime.UtcNow});
+            SELECT CAST(SCOPE_IDENTITY() as int)", new {id = rotationId, link = imageDto.Link, added = imageAdded});
 
-            return this.Ok(new { imageId = insertedImageID, link = imageDto.Link });
+            var createdImage = new Image()
+            {
+                ID = insertedImageID,
+                RotationID = rotationId,
+                Link = imageDto.Link,
+                Added = imageAdded
+            };
+
+            return this.Ok(createdImage);
         }
 
         // UPDATE: api/Rotations
