@@ -13,6 +13,7 @@ export class RotationImages extends Component {
         this.getUserRotationImages();
 
         this.imageAdded = this.imageAdded.bind(this);
+        this.imageRemoved = this.imageRemoved.bind(this);
     }
 
     render () {
@@ -20,7 +21,7 @@ export class RotationImages extends Component {
             <Container>
                 {this.state.images.map(item => (
                     <React.Fragment key={item.id}>
-                        <RotationImage imageLink={item.link}></RotationImage>
+                        <RotationImage image={item} imageRemoved={this.imageRemoved} baseUrl={this.props.baseUrl} authenticationToken={this.props.authenticationToken} ></RotationImage>
                     </React.Fragment>
                 ))}
                 <AddImage baseUrl={this.props.baseUrl} rotationId={this.props.rotationId} authenticationToken={this.props.authenticationToken} imageAdded={this.imageAdded}/>
@@ -56,7 +57,17 @@ export class RotationImages extends Component {
             
         let newImages = this.state.images.slice();
         newImages.push(image);
-        console.log(newImages);
+        this.setState({
+            images: newImages
+        });
+    }
+
+    imageRemoved(image) {
+        if (!image)
+            return;
+
+        let newImages = this.state.images.slice();
+        newImages = newImages.filter(img => img.id != image.id);
         this.setState({
             images: newImages
         });

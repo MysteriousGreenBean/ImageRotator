@@ -33,7 +33,7 @@ namespace AvatarRotator.Controllers
             int userID = this.GetAuthenticatedUserID();
 
             IEnumerable<Rotation> result =
-                await this._connection.QueryAsync<Rotation>("SELECT * FROM Rotations WHERE OwnerID = @uid",
+                await this._connection.QueryAsync<Rotation>("SELECT * FROM Rotations WHERE OwnerID = @uid ORDER BY Added",
                     new {uid = userID});
 
             return this.Ok(result.ToArray());
@@ -64,6 +64,8 @@ namespace AvatarRotator.Controllers
 
             int userID = this.GetAuthenticatedUserID();
 
+            DateTime rotationAdded = DateTime.UtcNow;
+
             int insertedRotationID = await this._connection.ExecuteScalarAsync<int>(
                 @"INSERT INTO [dbo].[Rotations]
                        ([OwnerID]
@@ -80,11 +82,26 @@ namespace AvatarRotator.Controllers
                 {
                     ownerID = userID,
                     rotationName = rotationDto.Name,
-                    addedTime = DateTime.UtcNow
+                    addedTime = rotationAdded
                 });
 
-            return this.Ok(new
-                { rotationID = insertedRotationID, link = this.Base64Encode(insertedRotationID.ToString()) });
+            string link =
+                $@"https://rotator.mortis.pl/av/{this.Base64Encode(insertedRotationID.ToString())}";
+
+            await this._connection.ExecuteAsync("UPDATE Rotations SET Link = @rotationLink WHERE ID = @id",
+                new {rotationLink = link, id = insertedRotationID});
+
+            var createdRotation = new Rotation()
+            {
+                ID = insertedRotationID,
+                OwnerID = userID,
+                Name = rotationDto.Name,
+                Added = rotationAdded,
+                Modified = rotationAdded,
+                Link = link
+            };
+
+            return this.Ok(createdRotation);
         }
 
         // POST: api/Rotations
@@ -128,26 +145,30 @@ namespace AvatarRotator.Controllers
         }
 
         // UPDATE: api/Rotations
-        [HttpPatch]
-        public async Task<IActionResult> PatchRotation([FromBody] RotationDto rotationDto)
+        [HttpPatch("{rotationId}")]
+        public async Task<IActionResult> PatchRotation([FromRoute] int rotationId, [FromBody] RotationDto rotationDto)
         {
             if (string.IsNullOrWhiteSpace(rotationDto.Name))
                 return this.BadRequest("Name cannot be empty");
 
-            (Rotation rotation, IActionResult responseIfInvalid) = await this.GetRotationIfExistsAndUserHasAccessToIt(rotationDto.ID);
+            (Rotation rotation, IActionResult responseIfInvalid) = await this.GetRotationIfExistsAndUserHasAccessToIt(rotationId);
 
             if (rotation == null)
                 return responseIfInvalid;
 
+            DateTime modifiedDate = DateTime.UtcNow;
+
             await this._connection.ExecuteAsync(
                 "UPDATE Rotations SET Name = @name, Modified = @modified WHERE ID = @id", new
                 {
-                    id = rotationDto.ID,
-                    Name = rotationDto.Name,
-                    Modified = DateTime.UtcNow
+                    id = rotationId,
+                    name = rotationDto.Name,
+                    modified = modifiedDate
                 });
 
-            return this.Ok();
+            rotation.Name = rotationDto.Name;
+
+            return this.Ok(rotation);
         }
 
         // DELETE: api/Rotations/5?ImageId=4

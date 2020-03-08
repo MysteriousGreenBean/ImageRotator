@@ -12,10 +12,10 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loggedIn: true,
-      username: "Tajemnicza Zielona Fasolka",
-      userId: 3,
-      authenticationToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjMiLCJuYmYiOjE1ODM1MzExNDIsImV4cCI6MTU4NDEzNTk0MiwiaWF0IjoxNTgzNTMxMTQyfQ.pOuA_hxZIIUk8g03eJ8fkU-XelluchAgPiP2tyGdhlc"
+      loggedIn: false,
+      username: "",
+      userId: -1,
+      authenticationToken: ""
     };
     this.logIn = this.logIn.bind(this);
   }

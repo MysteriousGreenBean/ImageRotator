@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace AvatarRotator.Models
 {
@@ -9,5 +10,6 @@ namespace AvatarRotator.Models
         public string Name { get; set; }
         public DateTime Added { get; set; }
         public DateTime Modified { get; set; }
+        public string Link { get; set; }
     }
 }

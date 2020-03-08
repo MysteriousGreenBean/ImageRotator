@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AvatarRotator.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("av")]
     [ApiController]
     public class AvatarController : ControllerBase
     {
@@ -22,7 +22,7 @@ namespace AvatarRotator.Controllers
             this._sqlConnection = sqlConnection;
         }
 
-        // GET: api/avatar/NQ==
+        // GET: av/NQ==
         [HttpGet("{rotationHash}")]
         public async Task<IActionResult> GetImage([FromRoute] string rotationHash)
         {
@@ -37,6 +37,9 @@ namespace AvatarRotator.Controllers
             Image[] rotationImages =
                 (await this._sqlConnection.QueryAsync<Image>(
                     "SELECT * FROM Images WHERE RotationID = @id ORDER BY Added", new {id = rotationId})).ToArray();
+
+            if (rotationImages.Length == 0)
+                return this.NoContent();
 
             int randomIndex = new Random().Next(0, rotationImages.Length);
 
