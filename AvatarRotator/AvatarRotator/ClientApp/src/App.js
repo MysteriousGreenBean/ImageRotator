@@ -5,18 +5,15 @@ import { Home } from './components/Home';
 import { FetchData } from './components/FetchData';
 import { Login } from './components/Login';
 import { AvatarRotator } from './components/AvatarRotator';
+import Cookies from 'universal-cookie';
 
 export default class App extends Component {
   static displayName = App.name;
 
   constructor(props) {
     super(props);
-    this.state = {
-      loggedIn: false,
-      username: "",
-      userId: -1,
-      authenticationToken: ""
-    };
+    this.state = this.getInitialState();
+    console.log(this.state);
     this.logIn = this.logIn.bind(this);
   }
 
@@ -39,5 +36,38 @@ export default class App extends Component {
       authenticationToken: token,
       loggedIn: true
     });
+    this.setLogInCookies(userId, username, token);
+  }
+
+  setLogInCookies(userId, username, token) {
+    const cookies = new Cookies();
+    let expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() + 5);
+
+    cookies.set('userId', userId, { expires : expirationDate });
+    cookies.set('username', username, { expires : expirationDate });
+    cookies.set('token', token, { expires : expirationDate });
+    cookies.set('loggedIn', true, { expires : expirationDate });
+  }  
+
+  getInitialState() {
+    const cookies = new Cookies();
+
+    let loggedIn = cookies.get('loggedIn');
+    if (loggedIn) {
+      return {
+        loggedIn: true,
+        username: cookies.get('username'),
+        userId: cookies.get('userId'),
+        authenticationToken: cookies.get('token')
+      };
+    } else {
+      return {
+        loggedIn: false,
+        username: "",
+        userId: -1,
+        authenticationToken: ""
+      };
+    }
   }
 }

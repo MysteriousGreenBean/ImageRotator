@@ -78,7 +78,7 @@ export class Login extends Component {
                 }
             }
         ).then(data => {
-            this.logIn(data.userId, data.username, data.token);
+            this.logIn(data.id, data.username, data.token);
         });
     }
 
