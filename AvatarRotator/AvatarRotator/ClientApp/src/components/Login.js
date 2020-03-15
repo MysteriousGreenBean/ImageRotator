@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Input, FormGroup, Button, Container } from 'reactstrap';
+import './Login.css';
 
 export class Login extends Component {
     static displayName = "Login";
@@ -18,15 +19,16 @@ export class Login extends Component {
 
     render () {
         return (
-        <Container>
+        <Container className="loginContainer">
             <Form>
                 <FormGroup>
-                    <Input type="text" id="username" placeholder="Mortisowa nazwa użytkownika" onChange={this.usernameChanged} invalid={this.state.invalidData}/>
+                    <Input type="text" id="username" className="textInput" placeholder="Mortisowa nazwa użytkownika" onChange={this.usernameChanged} invalid={this.state.invalidData}/>
                 </FormGroup>
                 <FormGroup>
-                    <Input type="password" id="password" placeholder="Hasło" onChange={this.passwordChanged} invalid={this.state.invalidData}/>
+                    <Input type="password" id="password" className="textInput" placeholder="Mortisowe hasło" onChange={this.passwordChanged} invalid={this.state.invalidData}/>
                 </FormGroup>
                 <Button 
+                    className="button"
                     disabled={this.state.loginDisabled} 
                     onClick={this.validate.bind(this)}>Zaloguj</Button>
             </Form>

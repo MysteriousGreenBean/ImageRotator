@@ -1,0 +1,34 @@
+body {
+    background-color: #091013;
+    color: #666;
+}
+
+.textInput {
+    background-color: #091013;
+    color: #666;
+    border-color: #232a2d;
+    border: px solid #232a2d;
+}
+
+.textInput:read-only {
+    background-color: #091013;
+    color: #666;
+    border-color: #232a2d;
+    border: px solid #232a2d;
+}
+
+
+.textInput:focus {
+    background-color: #091013;
+}
+
+.button {
+    background-color: #091013;
+    color: #666;
+    border: 1px solid #232a2d;
+}
+
+.button:disabled {
+    background-color: #091013;
+    color: #666;
+}

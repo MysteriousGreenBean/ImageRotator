@@ -1,0 +1,39 @@
+.avatarRotatorContainer {
+    width: 100%;
+    padding: 0;
+}
+
+.linkText:read-only {
+    width: 100%;
+    text-align: center;
+    border: 1px solid;
+    border-radius: 45px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: xx-large;
+    padding: 2%;
+    background-color: #091013;
+}
+
+.linkText:hover {
+    filter: brightness(130%);
+}
+
+.linkText::selection {
+    background: transparent;
+}
+
+.linkText::-moz-selection {
+    background: transparent;
+}
+
+.linkText::-webkit-selection {
+    background: transparent;
+}
+
+.alertClosed {
+    visibility: hidden;
+    display: block;
+}
+
+

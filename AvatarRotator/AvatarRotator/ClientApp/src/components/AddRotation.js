@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Input, FormGroup, Button, Container, NavItem, NavLink, ButtonGroup } from 'reactstrap';
+import { Input, Button, NavItem, NavLink, ButtonGroup } from 'reactstrap';
 
 export class AddRotation extends Component { 
 
@@ -24,9 +24,9 @@ export class AddRotation extends Component {
             control = 
                 <NavLink> 
                     <ButtonGroup>
-                        <Input type="text" invalid={this.state.isNewRotationNameInvalid} onChange={this.updateNewRotationName} autoFocus/>                    
-                        <Button onClick={this.validateName} id="rotationAdd"><i className="fas fa-plus-circle"></i></Button>
-                        <Button onClick={this.toggleMode} id="rotationAddCancel"><i className="fas fa-minus-circle"></i></Button>
+                        <Input type="text" className="textInput" invalid={this.state.isNewRotationNameInvalid} onChange={this.updateNewRotationName} autoFocus/>                    
+                        <Button className="button" onClick={this.validateName} id="rotationAdd"><i className="fas fa-plus-circle"></i></Button>
+                        <Button className="button" onClick={this.toggleMode} id="rotationAddCancel"><i className="fas fa-minus-circle"></i></Button>
                     </ButtonGroup>
                 </NavLink>
         } else {
@@ -43,7 +43,7 @@ export class AddRotation extends Component {
 
     blurToggle(event) {
         console.log(event.target);
-        if (event.target.id == "rotationAdd" || event.target.id == "rotationAddCancel") {
+        if (event.target.id === "rotationAdd" || event.target.id === "rotationAddCancel") {
             return;
          }
          this.toggleMode();

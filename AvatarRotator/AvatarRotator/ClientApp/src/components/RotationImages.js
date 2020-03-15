@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Input, FormGroup, Button, Container, ButtonGroup } from 'reactstrap';
+import { Container } from 'reactstrap';
 import { RotationImage } from './RotationImage';
 import { AddImage } from './AddImage';
 
@@ -67,7 +67,7 @@ export class RotationImages extends Component {
             return;
 
         let newImages = this.state.images.slice();
-        newImages = newImages.filter(img => img.id != image.id);
+        newImages = newImages.filter(img => img.id !== image.id);
         this.setState({
             images: newImages
         });

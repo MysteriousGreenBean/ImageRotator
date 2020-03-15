@@ -14,7 +14,7 @@ export class RemoveImage extends Component {
 
     render () {
         return (
-            <Button onClick={this.removeImage} className="removeImage"><i className="fas fa-trash-alt"></i></Button>
+            <Button className="removeImage button" onClick={this.removeImage}><i className="fas fa-trash-alt"></i></Button>
         );
     }
 

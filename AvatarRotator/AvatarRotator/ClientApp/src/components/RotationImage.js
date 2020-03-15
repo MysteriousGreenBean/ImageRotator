@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { Form, Input, FormGroup, Button, Container, ButtonGroup, Card, CardImg,
-     Modal, ModalHeader, ModalBody, ModalFooter, CardBody, CardTitle, CardText } from 'reactstrap';
-import './RotationImage.css';
+import { Input, Container, Card, CardImg, Modal, ModalHeader, ModalBody, ModalFooter, CardBody } from 'reactstrap';
 import { RemoveImage } from './RemoveImage';
+import './RotationImage.css';
 
 export class RotationImage extends Component { 
 
@@ -22,20 +21,19 @@ export class RotationImage extends Component {
         return (
             <Container className="cardContainer">
                 <Card className="card">
-                    <CardImg src={this.state.image.link} alt={this.state.image.link} onClick={this.toggle}/>
+                    <CardImg className="rotationImage" src={this.state.image.link} alt={this.state.image.link} onClick={this.toggle}/>
                     <CardBody>
-                        <Input type="text" value={this.state.image.link} readOnly />
+                        <Input className="textInput" type="text" value={this.state.image.link} readOnly />
                         <RemoveImage imageRemoved={this.imageRemoved} image={this.state.image} baseUrl={this.props.baseUrl} authenticationToken={this.props.authenticationToken}  />
                     </CardBody>
                 </Card>
-                <Modal isOpen={this.state.modal} toggle={this.toggle} className="imageModal">
-                    <ModalHeader toggle={this.toggle}>Tu byndzie link</ModalHeader>
+                <Modal className="imageModal" size="lg" isOpen={this.state.modal} toggle={this.toggle}>
+                    <ModalHeader toggle={this.toggle}>Podgląd obrazka</ModalHeader>
                     <ModalBody>
-                        <img src={this.state.image.link} />
+                        <img className="modalFullImage" src={this.state.image.link} alt="Podgląd obrazka"/>
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="primary" onClick={this.toggle}>Do Something</Button>{' '}
-                        <Button color="secondary" onClick={this.toggle}>Cancel</Button>
+                        <Input className="textInput" type="text" value={this.state.image.link} readOnly />
                     </ModalFooter>
                 </Modal>
             </Container>

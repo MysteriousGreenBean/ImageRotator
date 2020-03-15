@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { NavLink, orm, Input, FormGroup, Button, Container, ButtonGroup, NavItem } from 'reactstrap';
-import { AddRotation } from './AddRotation';
+import { Button } from 'reactstrap';
 
 
 export class RemoveRotation extends Component { 
@@ -13,7 +12,7 @@ export class RemoveRotation extends Component {
 
     render () {
         return(
-            <Button onClick={this.removeRotation}><i className="fas fa-trash-alt"></i></Button>
+            <Button  className="button" onClick={this.removeRotation}><i className="fas fa-trash-alt"></i></Button>
         )
     }
 

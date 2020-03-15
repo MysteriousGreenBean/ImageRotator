@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Form, Input, FormGroup, Button, Container, ButtonGroup, 
-    Card, CardImg, Modal, ModalHeader, ModalBody, ModalFooter, CardBody } from 'reactstrap';
-import './RotationImage.css';
+import { Input, Container,  Card, CardImg, CardBody } from 'reactstrap';
+import './AddImage.css';
 
 export class AddImage extends Component { 
 
@@ -20,9 +19,9 @@ export class AddImage extends Component {
         return (
             <Container className="cardContainer">
                 <Card className="card">
-                    <CardImg className="addImageButton" onClick={this.addLink} src="https://cdn0.iconfinder.com/data/icons/interface-solid-1/48/Add_circle_new-512.png"></CardImg>
+                    <CardImg id="test" className="addImageButton button" onClick={this.addLink} src="https://i.imgur.com/USdndK4.png"></CardImg>
                     <CardBody>
-                        <Input type="text" invalid={this.state.linkInvalid} onChange={this.linkChanged}/>
+                        <Input type="text" className="textInput" placeholder="Link do obrazka" invalid={this.state.linkInvalid} onChange={this.linkChanged}/>
                     </CardBody>
                 </Card>
             </Container>

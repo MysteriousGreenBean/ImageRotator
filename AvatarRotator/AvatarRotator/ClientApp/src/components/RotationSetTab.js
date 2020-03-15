@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { NavLink, orm, Input, FormGroup, Button, Container, ButtonGroup, NavItem } from 'reactstrap';
-import { AddRotation } from './AddRotation';
+import { NavLink, Input, Button, ButtonGroup, NavItem } from 'reactstrap';
 import { RemoveRotation } from './RemoveRotation';
 
 
@@ -30,10 +29,10 @@ export class RotationSetTab extends Component {
            <NavItem>
                 <NavLink> 
                     <ButtonGroup>
-                        <Input type="text" invalid={this.state.isNewRotationNameInvalid} onChange={this.updateNewRotationName} defaultValue={this.state.rotation.name}/>                    
-                        <Button onClick={this.updateRotationName}><i className="fas fa-save"></i></Button>
-                        <RemoveRotation baseUrl={this.props.baseUrl} authenticationToken={this.props.authenticationToken} rotation={this.state.rotation} rotationRemoved={this.rotationRemoved}/>
-                        <Button onClick={this.toggleMode}><i className="fas fa-minus-circle"></i></Button>
+                        <Input type="text" className="textInput"  invalid={this.state.isNewRotationNameInvalid} onChange={this.updateNewRotationName} defaultValue={this.state.rotation.name}/>                    
+                        <Button className="button" onClick={this.updateRotationName}><i className="fas fa-save"></i></Button>
+                        <RemoveRotation className="button" baseUrl={this.props.baseUrl} authenticationToken={this.props.authenticationToken} rotation={this.state.rotation} rotationRemoved={this.rotationRemoved}/>
+                        <Button className="button" onClick={this.toggleMode}><i className="fas fa-minus-circle"></i></Button>
                     </ButtonGroup>
                 </NavLink>
             </NavItem>
@@ -104,7 +103,7 @@ export class RotationSetTab extends Component {
                     return null;
                 }
             }
-        ). then(data => {
+        ).then(data => {
             if (data) {
                 this.setState({
                     rotation: data,
@@ -113,7 +112,6 @@ export class RotationSetTab extends Component {
                     rotationName: data.name
                 });
             }
-               
         });
     }
 }

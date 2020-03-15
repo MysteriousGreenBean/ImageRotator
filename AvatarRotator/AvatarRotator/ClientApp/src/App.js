@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router';
-import { Layout } from './components/Layout';
-import { Home } from './components/Home';
-import { FetchData } from './components/FetchData';
 import { Login } from './components/Login';
 import { AvatarRotator } from './components/AvatarRotator';
 import Cookies from 'universal-cookie';
+import './App.css';
 
 export default class App extends Component {
   static displayName = App.name;
@@ -13,7 +10,6 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = this.getInitialState();
-    console.log(this.state);
     this.logIn = this.logIn.bind(this);
   }
 
@@ -44,17 +40,17 @@ export default class App extends Component {
     let expirationDate = new Date();
     expirationDate.setDate(expirationDate.getDate() + 5);
 
-    cookies.set('userId', userId, { expires : expirationDate });
-    cookies.set('username', username, { expires : expirationDate });
-    cookies.set('token', token, { expires : expirationDate });
-    cookies.set('loggedIn', true, { expires : expirationDate });
+    cookies.set('userId', userId, { expires: expirationDate });
+    cookies.set('username', username, { expires: expirationDate });
+    cookies.set('token', token, { expires: expirationDate });
+    cookies.set('loggedIn', true, { expires: expirationDate });
   }  
 
   getInitialState() {
     const cookies = new Cookies();
 
     let loggedIn = cookies.get('loggedIn');
-    if (loggedIn) {
+    if (loggedIn === 'true') {
       return {
         loggedIn: true,
         username: cookies.get('username'),

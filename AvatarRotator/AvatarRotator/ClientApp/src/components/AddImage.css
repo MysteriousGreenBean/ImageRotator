@@ -1,0 +1,9 @@
+.addImageButton {
+    height: 320px;
+    width: 200px;
+}
+
+.addImageButton:hover {
+    filter: brightness(130%);
+    transition: 0.5s;
+}
