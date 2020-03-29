@@ -1,15 +1,14 @@
-﻿using System;
-using System.Data.SqlClient;
+﻿using Dapper;
+using MySql.Data.MySqlClient;
+using System;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-using Dapper;
-using MySql.Data.MySqlClient;
 
 namespace MortisAuthenticator
 {
     internal class UserAuthenticator : IUserAuthenticator
     {
-        private const string ConnectionString = "server=mortis.org.pl;database=mortisor_mybb;uid=morti_mws;password=Justin2bieber.pl";
+        private const string ConnectionString = "server=mortis.org.pl;database=mortisor_mybb;uid=morti_mws;password=Justin2bieber.pl;charset=utf8";
 
         public async Task<(int ID, string username)> GetUserIfValidCredentialsAsync(string username, string password)
         {
