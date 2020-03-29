@@ -19,7 +19,7 @@ export class AddImage extends Component {
         return (
             <Container className="cardContainer">
                 <Card className="card">
-                    <CardImg id="test" className="addImageButton button" onClick={this.addLink} src="https://i.imgur.com/USdndK4.png"></CardImg>
+                    <CardImg id="test" className="addImageButton button" onClick={this.addLink} src={require('../resources/images/add_photo.png')}></CardImg>
                     <CardBody>
                         <Input type="text" className="textInput" placeholder="Link do obrazka" invalid={this.state.linkInvalid} onChange={this.linkChanged}/>
                     </CardBody>
