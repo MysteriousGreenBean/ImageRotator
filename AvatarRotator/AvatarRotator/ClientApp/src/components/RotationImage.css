@@ -5,9 +5,10 @@
 }
 
 .card {
-    height: 320px;
-    width: 200px;
+    height: 322px;
+    width: 201px;
     border: none;
+    background-color: #091013;
 }
 
 .removeImage {
@@ -20,8 +21,6 @@
 }
 
 .rotationImage {
-    height: 320px;
-    width: 200px;
     color: #666;
     border: 1px solid #232a2d;
 }

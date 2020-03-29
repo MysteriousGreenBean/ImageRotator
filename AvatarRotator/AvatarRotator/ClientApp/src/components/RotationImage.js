@@ -21,7 +21,12 @@ export class RotationImage extends Component {
         return (
             <Container className="cardContainer">
                 <Card className="card">
-                    <CardImg className="rotationImage" src={this.state.image.link} alt={this.state.image.link} onClick={this.toggle}/>
+                    <CardImg 
+                        className="rotationImage" 
+                        src={this.state.image.link} 
+                        alt={this.state.image.link} 
+                        onClick={this.toggle}
+                        />
                     <CardBody>
                         <Input className="textInput" type="text" value={this.state.image.link} readOnly />
                         <RemoveImage imageRemoved={this.imageRemoved} image={this.state.image} baseUrl={this.props.baseUrl} authenticationToken={this.props.authenticationToken}  />
