@@ -28,6 +28,7 @@ export class Login extends Component {
                     <Input type="password" id="password" className="textInput" placeholder="Mortisowe hasło" onChange={this.passwordChanged} invalid={this.state.invalidData}/>
                 </FormGroup>
                 <Button 
+                    type="submit"
                     className="button"
                     disabled={this.state.loginDisabled} 
                     onClick={this.validate.bind(this)}>Zaloguj</Button>
