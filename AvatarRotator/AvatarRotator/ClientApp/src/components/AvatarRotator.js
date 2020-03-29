@@ -41,7 +41,7 @@ export class AvatarRotator extends Component {
                             <Alert color="info" isOpen={this.state.linkCopied} toggle={this.hideMessage} fade={true}>
                                 Link został skopiowany do schowka.
                             </Alert>
-                            <Input type="text" className="linkText" onClick={this.copyLink} value={item.link} readOnly></Input>
+                            <Input type="text" className="linkText" onClick={this.copyLink} value={this.props.baseUrl + item.link} readOnly></Input>
                             <RotationImages baseUrl={this.props.baseUrl} rotationId={item.id} authenticationToken={this.props.authenticationToken} />
                             </TabPane>
                         </React.Fragment>

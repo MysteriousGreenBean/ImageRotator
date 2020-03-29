@@ -86,7 +86,7 @@ namespace AvatarRotator.Controllers
                 });
 
             string link =
-                $@"https://rotator.mortis.pl/av/{this.Base64Encode(insertedRotationID.ToString())}";
+                $@"av/{this.Base64Encode(insertedRotationID.ToString())}";
 
             await this._connection.ExecuteAsync("UPDATE Rotations SET Link = @rotationLink WHERE ID = @id",
                 new {rotationLink = link, id = insertedRotationID});
