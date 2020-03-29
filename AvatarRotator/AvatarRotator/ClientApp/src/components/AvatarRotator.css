@@ -3,6 +3,10 @@
     padding: 0;
 }
 
+.rotatorNav {
+    border-bottom: 1px solid #232a2d;
+}
+
 .linkText:read-only {
     width: 100%;
     text-align: center;

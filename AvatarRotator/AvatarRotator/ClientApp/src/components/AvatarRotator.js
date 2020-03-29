@@ -28,7 +28,7 @@ export class AvatarRotator extends Component {
         return (
             <Container className="avatarRotatorContainer">
                 <LogoutButton onLogOut={() => this.props.onLogOut()}/>
-                <Nav tabs>
+                <Nav tabs className="rotatorNav">
                     {this.state.rotations.map(item => (
                         <React.Fragment key={item.id}>
                             <RotationSetTab rotation={item} rotationChanged={this.rotationChanged} rotationRemoved={this.rotationRemoved} baseUrl={this.props.baseUrl} authenticationToken={this.props.authenticationToken} />
