@@ -16,7 +16,7 @@ export default class App extends Component {
   render () {
     if (this.state.loggedIn) {
       return(
-        <AvatarRotator baseUrl={this.props.baseUrl} authenticationToken={this.state.authenticationToken} />
+        <AvatarRotator baseUrl={this.props.baseUrl} authenticationToken={this.state.authenticationToken} onLogOut={() => this.onLogOut()} />
       );
     } else {
       return (
@@ -65,5 +65,14 @@ export default class App extends Component {
         authenticationToken: ""
       };
     }
+  }
+
+  onLogOut() {
+    this.setState({
+      userId: "",
+      username: "",
+      authenticationToken: "",
+      loggedIn: false
+    });
   }
 }

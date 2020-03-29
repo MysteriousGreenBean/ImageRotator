@@ -3,6 +3,7 @@ import { Alert, Nav, Input, Container,  TabContent, TabPane } from 'reactstrap';
 import { RotationSetTab } from './RotationSetTab';
 import { AddRotation } from './AddRotation';
 import { RotationImages } from './RotationImages';
+import { LogoutButton } from './LogoutButton';
 import './AvatarRotator.css'
 
 export class AvatarRotator extends Component { 
@@ -26,13 +27,14 @@ export class AvatarRotator extends Component {
     render () {
         return (
             <Container className="avatarRotatorContainer">
+                <LogoutButton onLogOut={() => this.props.onLogOut()}/>
                 <Nav tabs>
                     {this.state.rotations.map(item => (
                         <React.Fragment key={item.id}>
                             <RotationSetTab rotation={item} rotationChanged={this.rotationChanged} rotationRemoved={this.rotationRemoved} baseUrl={this.props.baseUrl} authenticationToken={this.props.authenticationToken} />
                         </React.Fragment>
                     ))}
-                    <AddRotation baseUrl={this.props.baseUrl} authenticationToken={this.props.authenticationToken}  rotationAdded={this.rotationAdded}/>
+                    <AddRotation baseUrl={this.props.baseUrl} authenticationToken={this.props.authenticationToken} rotationAdded={this.rotationAdded}/>
                 </Nav>
                 <TabContent activeTab={this.state.activeRotation}>
                     {this.state.rotations.map(item => (

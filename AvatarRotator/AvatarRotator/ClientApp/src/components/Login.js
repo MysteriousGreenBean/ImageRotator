@@ -15,6 +15,7 @@ export class Login extends Component {
         };
         this.usernameChanged = this.usernameChanged.bind(this);
         this.passwordChanged = this.passwordChanged.bind(this);
+        this.keyPressed = this.keyPressed.bind(this);
     }
 
     render () {
@@ -22,13 +23,28 @@ export class Login extends Component {
         <Container className="loginContainer">
             <Form>
                 <FormGroup>
-                    <Input type="text" id="username" className="textInput" placeholder="Mortisowa nazwa użytkownika" onChange={this.usernameChanged} invalid={this.state.invalidData}/>
+                    <Input 
+                        type="text" 
+                        id="username"
+                        className="textInput" 
+                        placeholder="Mortisowa nazwa użytkownika" 
+                        onChange={this.usernameChanged} 
+                        invalid={this.state.invalidData}
+                        onKeyPress={this.keyPressed}
+                        />
                 </FormGroup>
                 <FormGroup>
-                    <Input type="password" id="password" className="textInput" placeholder="Mortisowe hasło" onChange={this.passwordChanged} invalid={this.state.invalidData}/>
+                    <Input 
+                        type="password" 
+                        id="password" 
+                        className="textInput" 
+                        placeholder="Mortisowe hasło" 
+                        onChange={this.passwordChanged} 
+                        invalid={this.state.invalidData}
+                        onKeyPress={this.keyPressed}
+                        />
                 </FormGroup>
                 <Button 
-                    type="submit"
                     className="button"
                     disabled={this.state.loginDisabled} 
                     onClick={this.validate.bind(this)}>Zaloguj</Button>
@@ -87,5 +103,11 @@ export class Login extends Component {
 
     logIn(userId, username, token) {
         this.props.logIn(userId, username, token);
+    }
+
+    keyPressed(e) {
+        if (e.key === "Enter") {
+            this.validate();
+        }
     }
 }
