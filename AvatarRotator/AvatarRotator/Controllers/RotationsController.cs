@@ -111,6 +111,9 @@ namespace AvatarRotator.Controllers
             if (string.IsNullOrWhiteSpace(imageDto.Link))
                 return this.BadRequest("Image link cannot be empty.");
 
+            if (!this.IsLinkOverHttps(imageDto.Link))
+                return this.BadRequest("Image must be hosted over https");
+
             Task<bool> isImageLinkValid = this.ImageLinkExists(imageDto.Link);
 
             (Rotation rotation, IActionResult responseIfInvalid) = await this.GetRotationIfExistsAndUserHasAccessToIt(rotationId);
@@ -207,6 +210,18 @@ namespace AvatarRotator.Controllers
                 return (null, this.Unauthorized("This rotation doesn't belong to the user.'"));
 
             return (rotation, null);
+        }
+
+        private bool IsLinkOverHttps(string urlAddress)
+        {
+            try
+            {
+                return new Uri(urlAddress).Scheme == Uri.UriSchemeHttps;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
         }
 
         private async Task<bool> ImageLinkExists(string imageUrlAddress)
